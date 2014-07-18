@@ -1,0 +1,67 @@
+#!/bin/bash
+set -e
+
+MULTICAST_GROUP_IP=224.124.1.8
+ELLIPTICS_PORT=${ELLIPTICS_PORT:-1025}
+
+if [ -z "${ELLIPTICS_HOSTNAME}" ]; then
+  echo "env ELLIPTICS_HOSTNAME must be defined"
+  exit 1
+  # IP_REGEX='[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+  # ELLIPTICS_IP="$(echo ${ELLIPTICS_PORT} | egrep -o ${IP_REGEX})"
+  # ELLIPTICS_PORT="$(echo ${ELLIPTICS_PORT} | egrep -o '[0-9]+$')"
+fi
+
+
+# configuration
+sed -i "s,{{MULTICAST_GROUP_IP}},${MULTICAST_GROUP_IP},g" \
+  -i /app/setup/cocaine.conf
+
+sed -i "s,{{ELLIPTICS_HOSTNAME}},${ELLIPTICS_HOSTNAME},g" \
+  -i /app/setup/cocaine.conf
+
+sed -i "s,{{ELLIPTICS_PORT}},${ELLIPTICS_PORT},g" \
+  -i /app/setup/cocaine.conf
+
+# make some directories
+mkdir /var/run/cocaine
+
+appStart () {
+
+  echo 'Running cocaine...'
+  cocaine-runtime -c /app/setup/cocaine.conf -d
+  sleep 2
+  tail -f /var/log/cocaine
+
+}
+
+appHelp () {
+  echo "Available options:"
+  echo "  app:start          - Starts the elliptics (default)"
+  echo "  app:help           - Displays the help"
+  echo "  [command]          - Execute the specified linux command eg. bash"
+}
+
+case "$1" in
+  app:start)
+    appStart
+    ;;
+  app:help)
+    appHelp
+    ;;
+  *)
+    if [ -x $1 ]; then
+      $1
+    else
+      prog=$(which $1)
+      if [ -n "${prog}" ] ; then
+        shift 1
+        $prog $@
+      else
+        appHelp
+      fi
+    fi
+    ;;
+esac
+
+exit 0
