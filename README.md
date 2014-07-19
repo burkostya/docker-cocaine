@@ -50,6 +50,7 @@ for isolation of applications
 - `--net host` binds container network to host.
 Problem is that cocaine randomly expose ports for services
 so we do not know which port to bind to host until container is running
+and cocaine-tool do not know where is `node` service is
 
 # Configuration
 
