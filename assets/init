@@ -23,9 +23,6 @@ sed -i "s,{{ELLIPTICS_HOSTNAME}},${ELLIPTICS_HOSTNAME},g" \
 sed -i "s,{{ELLIPTICS_PORT}},${ELLIPTICS_PORT},g" \
   -i /app/setup/cocaine.conf
 
-# make some directories
-mkdir /var/run/cocaine
-
 appStart () {
 
   echo 'Running cocaine...'

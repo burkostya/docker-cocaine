@@ -39,6 +39,7 @@ Run container
 ```bash
 docker run --name cocaine -it --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -e /var/run/cocaine:/var/run/cocaine \
   -e "ELLIPTICS_HOSTNAME=${ELLIPTICS_HOSTNAME}" \
   --net host \
   burkostya/cocaine:0.11.2.5
@@ -46,6 +47,8 @@ docker run --name cocaine -it --rm \
 
 - mounting of docker socket is needed if you plan using docker
 for isolation of applications
+- mounting of cocaine runtime is needed because cocaine
+creates socket for each services here and binds it to other docker containers
 - `ELLIPTICS_HOSTNAME` must be provided
 - `--net host` binds container network to host.
 Problem is that cocaine randomly expose ports for services
