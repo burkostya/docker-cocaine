@@ -2,7 +2,7 @@
 
 set -e
 
-ELLIPTICS_VERSION=2.25.5.1
+ELLIPTICS_VERSION=2.25.6.4
 COCAINE_VERSION=0.11.2.5
 
 IP=$(cat /etc/hosts | grep "${HOSTNAME}" | awk '{ print $1 }')
